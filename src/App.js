@@ -1,10 +1,20 @@
-import NavBar from "./components/NavBar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Orders from './pages/Orders';
+import Scanning from './pages/Scanning';
 
 function App() {
   return (
-    <div>
-      <NavBar />
-    </div>
+      <Layout>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/Orders" element={<Orders />} />
+            <Route path="/Scanning" element={<Scanning />} />
+          </Routes>
+        </BrowserRouter>
+      </Layout>
   );
 }
 

@@ -5,15 +5,34 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
-const pages = ['Strona główna', 'Zlecenia', 'Skanowanie'];
+const pages = [
+    {
+        name: 'Strona główna',
+        Icon: HomeOutlinedIcon,
+        path: '/'
+    },
+    {
+        name: 'Zlecenia',
+        Icon: ChecklistRtlIcon,
+        path: 'Orders'
+    },
+    {
+        name: 'Skanowanie',
+        Icon: QrCodeScannerIcon,
+        path: 'scanning'
+    }
+];
 const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -37,14 +56,14 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" sx={{ height: 40 }}>
+        <Toolbar variant='dense' disableGutters sx={{ minHeight: 40, height: 40 }}>
           <PrecisionManufacturingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -87,11 +106,15 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map((page) => {
+                const { name, Icon } = page
+                return (
+                    <MenuItem key={name} onClick={handleCloseNavMenu}>
+                        <Icon />
+                        <Typography textAlign="center" margin={1}>{name}</Typography>
+                    </MenuItem>
+                )}  
+              )}
             </Menu>
           </Box>
           <PrecisionManufacturingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -99,7 +122,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -114,15 +137,22 @@ function ResponsiveAppBar() {
             PMF
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) => {
+                const { name, Icon, path } = page
+                return (
+                    <Button
+                        key={name}
+                        href={path}
+                        onClick={handleCloseNavMenu}
+                        sx={{ my: 2, color: 'white', display: 'flex',
+                        ':hover': { bgcolor: 'primary.dark', width: 'auto' }
+                        }}
+                        startIcon={<Icon />}
+                        >
+                    {name}
+                    </Button>
+                )}
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
