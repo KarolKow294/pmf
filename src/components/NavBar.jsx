@@ -46,8 +46,9 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (path) => {
     setAnchorElNav(null);
+    window.location.href=path;
   };
 
   const handleCloseUserMenu = () => {
@@ -107,9 +108,9 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => {
-                const { name, Icon } = page
+                const { name, Icon, path } = page
                 return (
-                    <MenuItem key={name} onClick={handleCloseNavMenu}>
+                    <MenuItem key={name} onClick={() => handleCloseNavMenu(path)}>
                         <Icon />
                         <Typography textAlign="center" margin={1}>{name}</Typography>
                     </MenuItem>
