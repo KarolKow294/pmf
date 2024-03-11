@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Orders from './pages/Orders';
 import Scanning from './pages/Scanning';
 
-function App() {
+export default function App() {
   return (
       <Layout>
         <BrowserRouter>
@@ -17,5 +17,3 @@ function App() {
       </Layout>
   );
 }
-
-export default App;

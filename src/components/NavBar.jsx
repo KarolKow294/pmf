@@ -35,7 +35,7 @@ const pages = [
 ];
 const settings = ['Profile', 'Logout'];
 
-function ResponsiveAppBar() {
+export default function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -190,4 +190,3 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;

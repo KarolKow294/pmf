@@ -1,9 +1,14 @@
 import { Typography } from "@mui/material";
+import Order from "../components/Order";
 
 export default function Orders() {
     return (
-        <Typography>
-            Orders
-        </Typography>
+        <div>
+            <Typography>
+                Orders
+            </Typography>
+            <Order />
+        </div>
+        
     );
 }
