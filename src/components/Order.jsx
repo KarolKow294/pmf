@@ -3,25 +3,32 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Box from '@mui/material/Box';
 import OrderTable from './OrderTable';
 
-export default function Order() {
+export default function Order(props) {
   return (
     <div>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
           sx={{
           backgroundColor: "#A2D5F2",
-          height: 30
+          minHeight: 40,
+          maxHeight: 40,
+          '&.Mui-expanded': {
+            minHeight: 40,
+            maxHeight: 40,
+            backgroundColor: "#F3B95F",
+          }
           }}
         >
-          Conveyor nr:72/05/2024
+          <Box fontWeight='medium' color='#27374D' display='inline'>
+            {`${props.order.name} ${props.order.number}`}
+          </Box>
         </AccordionSummary>
-        <AccordionDetails>
-          <OrderTable />
+        <AccordionDetails sx={{padding: 0}}>
+          <OrderTable parts={props.order.parts}/>
         </AccordionDetails>
       </Accordion>
     </div>
