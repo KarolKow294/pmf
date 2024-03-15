@@ -11,11 +11,18 @@ import { urlStorages } from '../endpoints';
 export default function SelectStorage(props) {
     const [storages, setStorages] = useState([])
     useEffect(() => {
-        axios.get(urlStorages)
-          .then((response) => {
-            setStorages(response.data);
-          })
+        getStorages();
       }, []);
+
+      async function getStorages() {
+        try {
+            const response = await axios.get(urlStorages);
+            setStorages(response.data);
+        } catch (error) {
+            const errorMessage = "Error: " + error.message;
+            console.log(errorMessage);
+        }
+      }
   
     const [storageId, setStorage] = useState('');
 

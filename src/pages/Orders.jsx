@@ -6,11 +6,18 @@ import { urlOrders } from '../endpoints';
 export default function Orders() {
     const [orders, setOrders] = useState([])
     useEffect(() => {
-        axios.get(urlOrders)
-          .then((response) => {
-            setOrders(response.data);
-          })
+        getOrders();
       }, []);
+
+      async function getOrders() {
+        try {
+            const response = await axios.get(urlOrders);
+            setOrders(response.data);
+        } catch (error) {
+            const errorMessage = "Error: " + error.message;
+            console.log(errorMessage);
+        }
+      }
 
     return (
         <div>

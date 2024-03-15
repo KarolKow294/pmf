@@ -18,8 +18,10 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import axios from 'axios';
 import ShowQr from './ShowQr';
 import ChangeStorageButton from './ChangeStorageButton';
+import { urlOrders } from '../endpoints';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -171,6 +173,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function OrderTable(props) {
+  const [parts, setParts] = React.useState(props.parts);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('code');
   const [selected, setSelected] = React.useState([]);
@@ -183,7 +186,7 @@ export default function OrderTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = props.parts.map((part) => part.id);
+      const newSelected = parts.map((part) => part.id);
       setSelected(newSelected);
       return;
     }
@@ -212,9 +215,24 @@ export default function OrderTable(props) {
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const visibleRows = React.useMemo(() =>
-    stableSort(props.parts, getComparator(order, orderBy)),
-    [order, orderBy, props.parts],
+    stableSort(parts, getComparator(order, orderBy)),
+    [order, orderBy, parts],
   );
+
+  const handleCallback = async (orderId) => {
+    const response = await getParts(orderId);
+    setParts(response);
+  };
+
+  async function getParts(orderId) {
+    try {
+        const response = await axios.get(`${urlOrders}/${orderId}`);
+        return response.data;
+    } catch (error) {
+        const errorMessage = "Error: " + error.message;
+        console.log(errorMessage);
+    }
+  }
 
   return (
     <Box sx={{ width: '100%'}}>
@@ -232,7 +250,7 @@ export default function OrderTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={props.parts.length}
+              rowCount={parts.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
@@ -273,7 +291,7 @@ export default function OrderTable(props) {
                       <Typography>
                         {row.actualStorage}
                       </Typography>
-                      <ChangeStorageButton part={row} type="actual" />
+                      <ChangeStorageButton part={row} type="actual" changedStorageCallback={handleCallback} />
                       </Box>
                     </TableCell>
                     <TableCell align="center">
@@ -281,7 +299,7 @@ export default function OrderTable(props) {
                         <Typography>
                           {row.destinationStorage}
                         </Typography>
-                        <ChangeStorageButton part={row} type="destination" />
+                        <ChangeStorageButton part={row} type="destination" changedStorageCallback={handleCallback} />
                       </Box>
                     </TableCell>
                   </TableRow>

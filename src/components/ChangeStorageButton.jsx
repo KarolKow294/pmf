@@ -23,12 +23,18 @@ export default function ChangeStorageButton(props) {
     setOpen(false);
   };
 
-  const handleAccept = () => {
-    axios.put(`${urlOrders}/${props.part.id}`, {
-      id: storageId,
-      type: props.type,
-   });
-    setOpen(false);
+  const handleAccept = async () => {
+    try {
+      await axios.put(`${urlOrders}/${props.part.id}`, {
+        id: storageId,
+        type: props.type,
+      });
+      props.changedStorageCallback(props.part.orderId);
+      setOpen(false);
+    } catch (error) {
+      const errorMessage = "Error: " + error.message;
+            console.log(errorMessage);
+    }
   };
 
   const handleCallback = (childData) => {
