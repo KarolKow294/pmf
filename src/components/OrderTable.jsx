@@ -18,6 +18,8 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import ShowQr from './ShowQr';
+import ChangeStorageButton from './ChangeStorageButton';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -168,7 +170,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable(props) {
+export default function OrderTable(props) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('code');
   const [selected, setSelected] = React.useState([]);
@@ -263,9 +265,25 @@ export default function EnhancedTable(props) {
                     <TableCell align="center">{row.material}</TableCell>
                     <TableCell align="center">{row.surface}</TableCell>
                     <TableCell align="center">{row.drawing}</TableCell>
-                    <TableCell align="center">{row.qr}</TableCell>
-                    <TableCell align="center">{row.storage}</TableCell>
-                    <TableCell align="center">{row.destination}</TableCell>
+                    <TableCell align="center">
+                      <ShowQr qrCode={row.qrDataImage} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Typography>
+                        {row.actualStorage}
+                      </Typography>
+                      <ChangeStorageButton part={row} type="actual" />
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Typography>
+                          {row.destinationStorage}
+                        </Typography>
+                        <ChangeStorageButton part={row} type="destination" />
+                      </Box>
+                    </TableCell>
                   </TableRow>
                 );
               })}

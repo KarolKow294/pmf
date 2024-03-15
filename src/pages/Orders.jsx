@@ -8,10 +8,9 @@ export default function Orders() {
     useEffect(() => {
         axios.get(urlOrders)
           .then((response) => {
-            console.log(response.data);
             setOrders(response.data);
           })
-      }, [])
+      }, []);
 
     return (
         <div>
