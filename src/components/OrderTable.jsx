@@ -13,14 +13,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import axios from 'axios';
 import ShowQr from './ShowQr';
 import ChangeStorageButton from './ChangeStorageButton';
+import DeletePartButton from './DeletePartButton';
+import AddPartButton from './AddPartButton';
 import { urlOrders } from '../endpoints';
 
 function descendingComparator(a, b, orderBy) {
@@ -39,10 +39,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -66,6 +62,21 @@ const headCells = [
   { id: 'actualStorage', label: 'Aktualny magazyn' },
   { id: 'destinationStorage', label: 'Docelowy magazyn' },
 ];
+
+const translatedSurface = (surface) => {
+  let translatedSurface;
+  switch (surface) {
+    case "Painted":
+      translatedSurface = "Malowana";
+      break;
+    case "Galvanised":
+      translatedSurface = "Ocynkowana";
+      break
+    default:
+      translatedSurface = "Unknown";
+  }
+  return translatedSurface;
+}
 
 function EnhancedTableHead(parameters) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = parameters;
@@ -123,8 +134,12 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+function TableToolbar(props) {
+  const numSelected = props.numSelected.length;
+
+  const handleCallback = () => {
+    props.parentCallback();
+  }; 
 
   return (
     <Toolbar
@@ -140,40 +155,39 @@ function EnhancedTableToolbar(props) {
         }),
       }}
     >
-      {numSelected > 0 && (
+      {numSelected > 0 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: '1 1 100%', maxWidth: '50%' }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
           {numSelected} selected
         </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: '1 1 100%', maxWidth: '50%' }}
+          component="div"
+        >
+          <FilterListIcon />
+        </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
+          <DeletePartButton selectedPartsId={props.numSelected} parentCallback={handleCallback} />
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
+        <Tooltip title="Add part">
+          <AddPartButton orderId={props.orderId} parentCallback={handleCallback} />
         </Tooltip>
       )}
     </Toolbar>
   );
 }
 
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function OrderTable(props) {
-  const [parts, setParts] = React.useState(props.parts);
+  const [parts, setParts] = React.useState(props.order.parts);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('code');
   const [selected, setSelected] = React.useState([]);
@@ -219,17 +233,17 @@ export default function OrderTable(props) {
     [order, orderBy, parts],
   );
 
-  const handleCallback = async (orderId) => {
-    const response = await getParts(orderId);
+  const handleCallback = async () => {
+    const response = await getParts();
     setParts(response);
   };
 
   async function getParts(orderId) {
     try {
-        const response = await axios.get(`${urlOrders}/${orderId}`);
+        const response = await axios.get(`${urlOrders}/${props.order.id}`);
         return response.data;
     } catch (error) {
-        const errorMessage = "Error: " + error.message;
+        const errorMessage = "Get error: " + error.message;
         console.log(errorMessage);
     }
   }
@@ -237,7 +251,7 @@ export default function OrderTable(props) {
   return (
     <Box sx={{ width: '100%'}}>
       <Paper sx={{ width: '100%'}}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableToolbar numSelected={selected} orderId={props.order.id} parentCallback={handleCallback} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -281,7 +295,7 @@ export default function OrderTable(props) {
                     <TableCell align="center">{row.code}</TableCell>
                     <TableCell align="center">{row.quantity}</TableCell>
                     <TableCell align="center">{row.material}</TableCell>
-                    <TableCell align="center">{row.surface}</TableCell>
+                    <TableCell align="center">{translatedSurface(row.surface)}</TableCell>
                     <TableCell align="center">{row.drawing}</TableCell>
                     <TableCell align="center">
                       <ShowQr qrCode={row.qrDataImage} />

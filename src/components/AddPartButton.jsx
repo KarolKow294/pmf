@@ -3,17 +3,17 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import { useState } from 'react';
+import NewPartProps from './NewPartProps';
 import axios from 'axios';
-import SelectStorage from './SelectStorage';
 import { urlOrders } from '../endpoints';
 
-export default function ChangeStorageButton(props) {
-  const [open, setOpen] = useState(false);
-  const [storageId, setStorage] = useState();
+export default function AddPartButton(props) {
+  const [open, setOpen] = React.useState(false);
+  const [part, setPart] = React.useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,28 +23,33 @@ export default function ChangeStorageButton(props) {
     setOpen(false);
   };
 
-  const handleAccept = async () => {
-    try {
-      await axios.put(`${urlOrders}/${props.part.id}`, {
-        id: storageId,
-        type: props.type,
-      });
-      props.changedStorageCallback();
-      setOpen(false);
-    } catch (error) {
-      const errorMessage = "Put error: " + error.message;
-            console.log(errorMessage);
-    }
+  const handleAccept = () => {
+    addPart();
+    setOpen(false);
   };
 
-  const handleCallback = (childData) => {
-    setStorage(childData);
-  };
+  const handleNewPart = (newPart) => {
+    setPart(newPart);
+  }
+
+  async function addPart() {
+    try {
+        console.log(part);
+      await axios.post(`${urlOrders}/part`, {
+        ...part,
+        orderId: props.orderId,
+      });
+      props.parentCallback();
+    } catch (error) {
+      const errorMessage = "Post error: " + error.message;
+            console.log(errorMessage);
+    }
+  }
 
   return (
     <React.Fragment>
-      <IconButton variant="outlined" onClick={handleClickOpen}>
-        <ChangeCircleIcon sx={{ color: "#F3B95F" }}/>
+      <IconButton onClick={handleClickOpen}>
+            <AddCircleIcon sx={{ color: "#65B741" }} />
       </IconButton>
       <Dialog
         open={open}
@@ -53,10 +58,12 @@ export default function ChangeStorageButton(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Zmień magazyn"}
+          {"Dodanie detalu"}
         </DialogTitle>
         <DialogContent>
-          <SelectStorage storageData={props} parentCallback={handleCallback} />
+          <DialogContentText id="alert-dialog-description">
+            <NewPartProps parentCallback={handleNewPart}/>
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Anuluj</Button>

@@ -19,7 +19,7 @@ export default function SelectStorage(props) {
             const response = await axios.get(urlStorages);
             setStorages(response.data);
         } catch (error) {
-            const errorMessage = "Error: " + error.message;
+            const errorMessage = "Get error: " + error.message;
             console.log(errorMessage);
         }
       }

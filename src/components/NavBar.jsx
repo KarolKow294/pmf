@@ -25,7 +25,7 @@ const pages = [
     {
         name: 'Zlecenia',
         Icon: ChecklistRtlIcon,
-        path: 'Orders'
+        path: 'orders'
     },
     {
         name: 'Skanowanie',

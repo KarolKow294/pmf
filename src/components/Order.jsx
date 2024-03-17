@@ -28,7 +28,7 @@ export default function Order(props) {
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{padding: 0}}>
-          <OrderTable parts={props.order.parts}/>
+          <OrderTable order={props.order}/>
         </AccordionDetails>
       </Accordion>
     </div>

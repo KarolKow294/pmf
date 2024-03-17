@@ -3,17 +3,15 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import { useState } from 'react';
 import axios from 'axios';
-import SelectStorage from './SelectStorage';
 import { urlOrders } from '../endpoints';
 
-export default function ChangeStorageButton(props) {
-  const [open, setOpen] = useState(false);
-  const [storageId, setStorage] = useState();
+export default function DeletePartButton(props) {
+  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,28 +21,31 @@ export default function ChangeStorageButton(props) {
     setOpen(false);
   };
 
-  const handleAccept = async () => {
-    try {
-      await axios.put(`${urlOrders}/${props.part.id}`, {
-        id: storageId,
-        type: props.type,
-      });
-      props.changedStorageCallback();
-      setOpen(false);
-    } catch (error) {
-      const errorMessage = "Put error: " + error.message;
-            console.log(errorMessage);
-    }
+  const handleAccept = () => {
+    deleteParts();
+    setOpen(false);
   };
 
-  const handleCallback = (childData) => {
-    setStorage(childData);
-  };
+  async function deleteParts() {
+    try {
+      console.log(props.selectedPartsId);
+      //const integerArrayOfPartsId = props.selectedPartsId.map(id => parseInt(id, 10));
+      await axios.delete(urlOrders, {
+        data: props.selectedPartsId,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      const errorMessage = "Delete error: " + error.message;
+            console.log(errorMessage);
+    }
+  }
 
   return (
     <React.Fragment>
-      <IconButton variant="outlined" onClick={handleClickOpen}>
-        <ChangeCircleIcon sx={{ color: "#F3B95F" }}/>
+      <IconButton onClick={handleClickOpen}>
+        <DeleteIcon sx={{ color: "#FF6868" }} />
       </IconButton>
       <Dialog
         open={open}
@@ -53,10 +54,12 @@ export default function ChangeStorageButton(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Zmień magazyn"}
+          {"Usuwanie detali"}
         </DialogTitle>
         <DialogContent>
-          <SelectStorage storageData={props} parentCallback={handleCallback} />
+          <DialogContentText id="alert-dialog-description">
+            Czy chcesz usunąć { props.selectedPartsId.length === 1 ? `${props.selectedPartsId.length } część` : `${props.selectedPartsId.length } części` }?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Anuluj</Button>
