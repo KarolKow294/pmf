@@ -99,8 +99,6 @@ export default function NewPartProps(props) {
       const handleFile = async (event) => {
         const file = event.target.files[0];
         setFileName(file.name);
-        //const buffer = await file.arrayBuffer();
-        //const blob = new Blob([buffer], { type: file.type });
         setFile(file);
         returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId, destinationStorageId, file: file, fileName: file.name });
       }

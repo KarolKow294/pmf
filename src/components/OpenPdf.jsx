@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 
 export default function OpenPdf(props) {
     const fileName = `${props.code}_${props.name}`;
@@ -22,11 +23,10 @@ export default function OpenPdf(props) {
     }
 
     const url = (props.drawing !=='' || props.drawing.trim() !=='') && generateBlobUrl();
-    console.log(url);
     
     return (
         <Box className = "App">
-          { url === false ? (<Typography>Brak</Typography>) : (<a href = {url} target = "_blank" rel="noreferrer" download={fileName}>Pobierz</a>) }
+          { url === false ? (<Typography>Brak</Typography>) : (<Link href = {url} target = "_blank" rel="noreferrer" download={fileName}>Pobierz</Link>) }
         </Box>
     );
 }

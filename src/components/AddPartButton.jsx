@@ -3,15 +3,15 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import NewPartProps from './NewPartProps';
 import axios from 'axios';
 import { urlOrders } from '../endpoints';
 
-export default function AddPartButton(props) {
+const AddPartButton = React.forwardRef((props, ref) => {
   const [open, setOpen] = React.useState(false);
   const [part, setPart] = React.useState([]);
 
@@ -62,9 +62,9 @@ export default function AddPartButton(props) {
   }
 
   return (
-    <React.Fragment>
-      <IconButton onClick={handleClickOpen}>
-            <AddCircleIcon sx={{ color: "#65B741" }} />
+    <Box>
+      <IconButton ref={ref} onClick={handleClickOpen}>
+        <AddCircleIcon sx={{ color: "#65B741" }} />
       </IconButton>
       <Dialog
         open={open}
@@ -76,15 +76,15 @@ export default function AddPartButton(props) {
           {"Dodanie detalu"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
             <NewPartProps parentCallback={handleNewPart}/>
-          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Anuluj</Button>
           <Button onClick={handleAccept} autoFocus>Ok</Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </Box>
   );
-}
+});
+
+export default AddPartButton;

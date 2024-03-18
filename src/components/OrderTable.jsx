@@ -1,27 +1,20 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
 import axios from 'axios';
 import ShowQr from './ShowQr';
 import OpenPdf from './OpenPdf';
 import ChangeStorageButton from './ChangeStorageButton';
-import DeletePartButton from './DeletePartButton';
-import AddPartButton from './AddPartButton';
+import OrderTableToolbar from './OrderTableToolbar';
+import OrderTableHead from './OrderTableHead';
+
 import { urlOrders } from '../endpoints';
 
 function descendingComparator(a, b, orderBy) {
@@ -52,18 +45,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  { id: 'name', label: 'Nazwa' },
-  { id: 'code', label: 'Kod' },
-  { id: 'quantity', label: 'Ilość' },
-  { id: 'material', label: 'Materiał' },
-  { id: 'surface', label: 'Powierzchnia' },
-  { id: 'drawing', label: 'Rysunek' },
-  { id: 'qrCode', label: 'Kod QR' },
-  { id: 'actualStorage', label: 'Aktualny magazyn' },
-  { id: 'destinationStorage', label: 'Docelowy magazyn' },
-];
-
 const translatedSurface = (surface) => {
   let translatedSurface;
   switch (surface) {
@@ -77,114 +58,6 @@ const translatedSurface = (surface) => {
       translatedSurface = "Unknown";
   }
   return translatedSurface;
-}
-
-function EnhancedTableHead(parameters) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = parameters;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'center'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{pl: 5}}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-function TableToolbar(props) {
-  const numSelected = props.numSelected.length;
-
-  const handleCallback = () => {
-    props.parentCallback();
-  }; 
-
-  return (
-    <Toolbar
-      variant="dense"
-      sx={{
-        minHeight: 40,
-        maxHeight: 40,
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%', maxWidth: '50%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%', maxWidth: '50%' }}
-          component="div"
-        >
-          <FilterListIcon />
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <DeletePartButton selectedPartsId={props.numSelected} parentCallback={handleCallback} />
-        </Tooltip>
-      ) : (
-        <Tooltip title="Add part">
-          <AddPartButton orderId={props.orderId} parentCallback={handleCallback} />
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
 }
 
 export default function OrderTable(props) {
@@ -252,14 +125,14 @@ export default function OrderTable(props) {
   return (
     <Box sx={{ width: '100%'}}>
       <Paper sx={{ width: '100%'}}>
-        <TableToolbar numSelected={selected} orderId={props.order.id} parentCallback={handleCallback} />
+        <OrderTableToolbar numSelected={selected} orderId={props.order.id} parentCallback={handleCallback} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size='small'
           >
-            <EnhancedTableHead
+            <OrderTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}

@@ -7,10 +7,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import axios from 'axios';
 import { urlOrders } from '../endpoints';
 
-export default function DeletePartButton(props) {
+const DeletePartButton = React.forwardRef((props, ref) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -28,14 +29,13 @@ export default function DeletePartButton(props) {
 
   async function deleteParts() {
     try {
-      console.log(props.selectedPartsId);
-      //const integerArrayOfPartsId = props.selectedPartsId.map(id => parseInt(id, 10));
       await axios.delete(urlOrders, {
         data: props.selectedPartsId,
         headers: {
           'Content-Type': 'application/json'
         }
       });
+      props.parentCallback();
     } catch (error) {
       const errorMessage = "Delete error: " + error.message;
             console.log(errorMessage);
@@ -43,8 +43,8 @@ export default function DeletePartButton(props) {
   }
 
   return (
-    <React.Fragment>
-      <IconButton onClick={handleClickOpen}>
+    <Box>
+      <IconButton ref={ref} onClick={handleClickOpen}>
         <DeleteIcon sx={{ color: "#FF6868" }} />
       </IconButton>
       <Dialog
@@ -66,6 +66,8 @@ export default function DeletePartButton(props) {
           <Button onClick={handleAccept} autoFocus>Ok</Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </Box>
   );
-}
+});
+
+export default DeletePartButton;
