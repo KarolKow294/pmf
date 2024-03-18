@@ -29,15 +29,30 @@ export default function AddPartButton(props) {
   };
 
   const handleNewPart = (newPart) => {
-    setPart(newPart);
+    const convertedPart = convertPartToDataForm(newPart);
+    setPart(convertedPart);
+  }
+
+  const convertPartToDataForm = (part) => {
+    const formData = new FormData();
+        formData.append('Name', part.name);
+        formData.append('Code', part.code);
+        formData.append('Quantity', part.quantity);
+        formData.append('Material', part.material);
+        formData.append('SurfaceId', part.surfaceId);
+        formData.append('ActualStorageId', part.actualStorageId);
+        formData.append('DestinationStorageId', part.destinationStorageId);
+        formData.append('OrderId', props.orderId);
+        formData.append('File', part.file, part.fileName);
+    return formData;
   }
 
   async function addPart() {
     try {
-        console.log(part);
-      await axios.post(`${urlOrders}/part`, {
-        ...part,
-        orderId: props.orderId,
+      await axios.post(`${urlOrders}/part`, part, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
       });
       props.parentCallback();
     } catch (error) {

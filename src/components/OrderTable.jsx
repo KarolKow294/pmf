@@ -18,6 +18,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import axios from 'axios';
 import ShowQr from './ShowQr';
+import OpenPdf from './OpenPdf';
 import ChangeStorageButton from './ChangeStorageButton';
 import DeletePartButton from './DeletePartButton';
 import AddPartButton from './AddPartButton';
@@ -296,7 +297,9 @@ export default function OrderTable(props) {
                     <TableCell align="center">{row.quantity}</TableCell>
                     <TableCell align="center">{row.material}</TableCell>
                     <TableCell align="center">{translatedSurface(row.surface)}</TableCell>
-                    <TableCell align="center">{row.drawing}</TableCell>
+                    <TableCell align="center">
+                      <OpenPdf name={row.name} code={row.code} drawing={row.drawing}/>
+                    </TableCell>
                     <TableCell align="center">
                       <ShowQr qrCode={row.qrDataImage} />
                     </TableCell>

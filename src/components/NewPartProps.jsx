@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { urlStorages } from '../endpoints';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import PropTypes from 'prop-types';
 
 const surfaces = [
     {
@@ -21,9 +22,13 @@ const surfaces = [
     },
   ];
 
-export default function FormPropsTextFields(props) {
+  NewPartProps.propTypes = {
+    file: PropTypes.object,
+  };
+
+export default function NewPartProps(props) {
     const [storages, setStorages] = useState([]);
-    const [fileName, setFileName] = useState([]);
+    const [fileName, setFileName] = useState('');
     const [name, setName] = useState([]);
     const [code, setCode] = useState([]);
     const [quantity, setQuantity] = useState(0);
@@ -31,7 +36,7 @@ export default function FormPropsTextFields(props) {
     const [surfaceId, setSurfaceId] = useState(1);
     const [actualStorageId, setActualStorageId] = useState('');
     const [destinationStorageId, setDestinationStorageId] = useState('');
-    const [file, setFile] = useState([]);
+    const [file, setFile] = useState(new Blob(['empty'], { type: 'text/plain' }));
 
     useEffect(() => {
         getStorages();
@@ -52,50 +57,52 @@ export default function FormPropsTextFields(props) {
       const handleName = (event) => {
         const newName = event.target.value;
         setName(newName);
-        returnNewPartToParent({ name: newName, code, quantity, material, surfaceId, actualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name: newName, code, quantity, material, surfaceId, actualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleCode = (event) => {
         const newCode = event.target.value;
         setCode(newCode);
-        returnNewPartToParent({ name, code: newCode, quantity, material, surfaceId, actualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name, code: newCode, quantity, material, surfaceId, actualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleQuantity = (event) => {
         const newQuantity = event.target.value;
         setQuantity(newQuantity);
-        returnNewPartToParent({ name, code, quantity: newQuantity, material, surfaceId, actualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name, code, quantity: newQuantity, material, surfaceId, actualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleMaterial = (event) => {
         const newMaterial = event.target.value;
         setMaterial(newMaterial);
-        returnNewPartToParent({ name, code, quantity, material: newMaterial, surfaceId, actualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name, code, quantity, material: newMaterial, surfaceId, actualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleSurfaceId = (event) => {
         const newSurfaceId = event.target.value;
         setSurfaceId(newSurfaceId);
-        returnNewPartToParent({ name, code, quantity, material, surfaceId: newSurfaceId, actualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name, code, quantity, material, surfaceId: newSurfaceId, actualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleActualStorageId = (event) => {
         const newActualStorageId = event.target.value;
         setActualStorageId(newActualStorageId);
-        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId: newActualStorageId, destinationStorageId, file });
+        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId: newActualStorageId, destinationStorageId, file, fileName });
       }
 
       const handleDestinationStorageId = (event) => {
         const newDestinationStorageId = event.target.value;
         setDestinationStorageId(newDestinationStorageId);
-        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId, destinationStorageId: newDestinationStorageId, file });
+        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId, destinationStorageId: newDestinationStorageId, file, fileName });
       }
 
-      const handleUploadName = async (event) => {
-        setFileName(event.target.files[0].name);
-        const buffer = await event.target.files[0].arrayBuffer()
-        setFile(buffer);
-        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId, destinationStorageId, file: buffer });
+      const handleFile = async (event) => {
+        const file = event.target.files[0];
+        setFileName(file.name);
+        //const buffer = await file.arrayBuffer();
+        //const blob = new Blob([buffer], { type: file.type });
+        setFile(file);
+        returnNewPartToParent({ name, code, quantity, material, surfaceId, actualStorageId, destinationStorageId, file: file, fileName: file.name });
       }
 
       const returnNewPartToParent = (newPart) => {
@@ -185,7 +192,7 @@ export default function FormPropsTextFields(props) {
                         type="file"
                         accept="application/pdf"
                         hidden
-                    onChange={handleUploadName}
+                    onChange={handleFile}
                     />
                 </IconButton>
                 ),
