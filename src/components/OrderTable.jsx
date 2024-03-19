@@ -171,7 +171,7 @@ export default function OrderTable(props) {
                     <TableCell align="center">{row.material}</TableCell>
                     <TableCell align="center">{translatedSurface(row.surface)}</TableCell>
                     <TableCell align="center">
-                      <OpenPdf name={row.name} code={row.code} drawing={row.drawing}/>
+                      <OpenPdf id={row.id} name={row.name} code={row.code} drawing={row.drawing} parentCallback={handleCallback}/>
                     </TableCell>
                     <TableCell align="center">
                       <ShowQr qrCode={row.qrDataImage} />

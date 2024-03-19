@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import AddDrawing from './AddDrawing';
 
 export default function OpenPdf(props) {
     const fileName = `${props.code}_${props.name}`;
@@ -23,10 +23,14 @@ export default function OpenPdf(props) {
     }
 
     const url = (props.drawing !=='' || props.drawing.trim() !=='') && generateBlobUrl();
+
+    const handleAcceptDrawing = () => {
+        props.parentCallback();
+    }
     
     return (
         <Box className = "App">
-          { url === false ? (<Typography>Brak</Typography>) : (<Link href = {url} target = "_blank" rel="noreferrer" download={fileName}>Pobierz</Link>) }
+          { url === false ? (<AddDrawing partId={props.id} parentCallback={handleAcceptDrawing} />) : (<Link href = {url} target = "_blank" rel="noreferrer" download={fileName}>Pobierz</Link>) }
         </Box>
     );
 }
