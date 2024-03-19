@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import NewPartProps from './NewPartProps';
 import axios from 'axios';
-import { urlOrders } from '../endpoints';
+import { urlPart } from '../endpoints';
 
 const AddPartButton = React.forwardRef((props, ref) => {
   const [open, setOpen] = React.useState(false);
@@ -49,7 +49,7 @@ const AddPartButton = React.forwardRef((props, ref) => {
 
   async function addPart() {
     try {
-      await axios.post(`${urlOrders}/part`, part, {
+      await axios.post(urlPart, part, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }

@@ -15,6 +15,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import ImportOrderButton from './ImportOrderButton';
+import { urlReactOrders } from '../endpoints';
 
 const pages = [
     {
@@ -35,7 +37,7 @@ const pages = [
 ];
 const settings = ['Profile', 'Logout'];
 
-export default function NavBar() {
+export default function NavBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -153,6 +155,9 @@ export default function NavBar() {
                     {name}
                     </Button>
                 )}
+            )}
+            {props.path === urlReactOrders && (
+              <ImportOrderButton />
             )}
           </Box>
 
