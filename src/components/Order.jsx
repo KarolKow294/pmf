@@ -5,8 +5,13 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import OrderTable from './OrderTable';
+import DeleteOrderButton from './DeleteOrderButton';
 
 export default function Order(props) {
+  const handleDeleteAccept = () => {
+    props.parentCallback();
+  }
+
   return (
     <div>
       <Accordion>
@@ -23,8 +28,9 @@ export default function Order(props) {
           }
           }}
         >
-          <Box fontWeight='medium' color='#27374D' display='inline'>
+          <Box fontWeight='medium' color='#27374D' display='flex' alignItems='center'>
             {`${props.order.name} ${props.order.number}`}
+              <DeleteOrderButton order={props.order} parentCallback={handleDeleteAccept}/>
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{padding: 0}}>

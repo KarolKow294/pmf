@@ -5,6 +5,11 @@ import { urlOrders } from '../endpoints';
 
 export default function Orders() {
     const [orders, setOrders] = useState([])
+
+    const handleRefreshAfterDelete = () => {
+        getOrders();
+    }
+
     useEffect(() => {
         getOrders();
       }, []);
@@ -23,7 +28,7 @@ export default function Orders() {
         <div>
             {orders.map((order) => {
                 const { id } = order
-                return <Order key={id} order={order} />
+                return <Order key={id} order={order} parentCallback={handleRefreshAfterDelete}/>
             })}
         </div>  
     );
