@@ -16,26 +16,43 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import ImportOrderButton from './ImportOrderButton';
-import { urlReactOrders } from '../endpoints';
+import { urlReactHome, urlReactOrders, urlReactScanning, urlRegister, urlLogin } from '../endpoints';
 
 const pages = [
     {
         name: 'Strona główna',
         Icon: HomeOutlinedIcon,
-        path: '/'
+        path: urlReactHome
     },
     {
         name: 'Zlecenia',
         Icon: ChecklistRtlIcon,
-        path: 'orders'
+        path: urlReactOrders
     },
     {
         name: 'Skanowanie',
         Icon: QrCodeScannerIcon,
-        path: 'scanning'
+        path: urlReactScanning
     }
 ];
-const settings = ['Profile', 'Logout'];
+const settings = [
+  {
+    name: 'Rejestracja',
+    path: {urlRegister}
+  },
+  {
+    name: 'Ustawienia',
+    path: '/'
+  },
+  {
+    name: 'Logowanie',
+    path: {urlLogin}
+  },
+  {
+    name: 'Wyloguj',
+    path: '/'
+  }
+];
 
 export default function NavBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -53,8 +70,9 @@ export default function NavBar(props) {
     window.location.href=path;
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (path) => {
     setAnchorElUser(null);
+    //window.location.href=path;
   };
 
   return (
@@ -66,7 +84,7 @@ export default function NavBar(props) {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={urlReactHome}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -163,7 +181,7 @@ export default function NavBar(props) {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Opcje profilu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                 <AccountCircleIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: 30 }} />
               </IconButton>
             </Tooltip>
@@ -184,8 +202,8 @@ export default function NavBar(props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
