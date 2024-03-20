@@ -2,6 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Modal from '@mui/material/Modal';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PdfLabel from './PdfLabel';
 
 const style = {
   position: 'absolute',
@@ -33,10 +35,16 @@ export default function ShowQr(props) {
       >
         <Box
         display="flex"
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
         sx={style}>
-            <img src={`data:image/png;base64, ${props.qrCode}`} alt="QrCode" />
+            <img src={`data:image/png;base64, ${props.part.qrDataImage}`} alt="QrCode" />
+            <PDFDownloadLink document={ <PdfLabel part={props.part} />} fileName={`${props.part.code}_etykieta.pdf`}>
+              {({ blob, url, loading, error }) =>
+                loading ? 'Generowanie pdf...' : 'Pobierz Pdf'
+              }
+            </PDFDownloadLink>
         </Box>
       </Modal>
     </div>

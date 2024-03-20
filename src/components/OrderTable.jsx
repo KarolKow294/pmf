@@ -174,7 +174,7 @@ export default function OrderTable(props) {
                       <OpenPdf id={row.id} name={row.name} code={row.code} drawing={row.drawing} parentCallback={handleCallback}/>
                     </TableCell>
                     <TableCell align="center">
-                      <ShowQr qrCode={row.qrDataImage} />
+                      <ShowQr part={row} />
                     </TableCell>
                     <TableCell align="center">
                       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
