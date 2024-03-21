@@ -3,6 +3,7 @@ export const urlReactHome = '/';
 export const urlReactOrders = '/orders';
 export const urlReactScanning = '/scanning';
 export const urlReactSignUp = '/signup';
+export const urlReactSignIn = '/signin';
 export const urlOrders = `${baseURL}/api/orders`;
 export const urlPart = `${baseURL}/api/orders/part`;
 export const urlDrawing = `${baseURL}/api/orders/part/drawing`;

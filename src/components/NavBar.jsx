@@ -7,16 +7,15 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import ImportOrderButton from './ImportOrderButton';
-import { urlReactHome, urlReactOrders, urlReactScanning, urlRegister, urlLogin } from '../endpoints';
+import ProfileMenu from './ProfileMenu';
+import { urlReactHome, urlReactOrders, urlReactScanning } from '../endpoints';
 
 const pages = [
     {
@@ -35,44 +34,22 @@ const pages = [
         path: urlReactScanning
     }
 ];
-const settings = [
-  {
-    name: 'Rejestracja',
-    path: {urlRegister}
-  },
-  {
-    name: 'Ustawienia',
-    path: '/'
-  },
-  {
-    name: 'Logowanie',
-    path: {urlLogin}
-  },
-  {
-    name: 'Wyloguj',
-    path: '/'
-  }
-];
 
 export default function NavBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = (path) => {
-    setAnchorElNav(null);
-    window.location.href=path;
-  };
-
-  const handleCloseUserMenu = (path) => {
-    setAnchorElUser(null);
-    //window.location.href=path;
+    if (path !== '') {
+      setAnchorElNav(null);
+      window.location.href=path;
+    } else {
+      setAnchorElNav(null);
+    }
   };
 
   return (
@@ -122,7 +99,7 @@ export default function NavBar(props) {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu('')}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
@@ -143,7 +120,7 @@ export default function NavBar(props) {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            href={urlReactHome}
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -178,36 +155,7 @@ export default function NavBar(props) {
               <ImportOrderButton />
             )}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Opcje profilu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
-                <AccountCircleIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: 30 }} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          <ProfileMenu />
         </Toolbar>
       </Container>
     </AppBar>

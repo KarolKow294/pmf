@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios';
-import { urlRegister, urlLogin } from '../endpoints';
+import { urlRegister, urlReactSignIn } from '../endpoints';
 
 export default function SignUp() {
   const [formData, setFormData] = React.useState({
@@ -197,7 +197,7 @@ export default function SignUp() {
         </Button>
         <Grid container justifyContent="flex-end">
             <Grid item>
-            <Link href={urlLogin} variant="body2">
+            <Link href={urlReactSignIn} variant="body2">
                 Czy masz już konto? Zaloguj się
             </Link>
             </Grid>
