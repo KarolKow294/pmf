@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { urlReactSignUp, urlReactSignIn } from '../endpoints';
+import { urlReactSignUp, urlReactSignIn, urlReactSettings } from '../endpoints';
 
 const isLoggedIn = !!localStorage.getItem('token');
 const settings = [
@@ -17,7 +17,7 @@ const settings = [
     },
     {
       name: 'Ustawienia',
-      path: '/',
+      path: urlReactSettings,
       isVisible: isLoggedIn
     },
     {

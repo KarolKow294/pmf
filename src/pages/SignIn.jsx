@@ -58,7 +58,8 @@ export default function SignIn() {
       }
 
       const setJwtToken = (response) => {
-        const token = response.data.token;
+        const token = response.data;
+        console.log(token);
         localStorage.setItem('token', token);
       }
     

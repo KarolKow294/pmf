@@ -6,8 +6,9 @@ import Orders from './pages/Orders';
 import Scanning from './pages/Scanning';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
-import { urlReactHome, urlReactOrders, urlReactScanning, urlReactSignUp, urlReactSignIn } from './endpoints';
+import { urlReactHome, urlReactOrders, urlReactScanning, urlReactSignUp, urlReactSignIn, urlReactSettings } from './endpoints';
 import { Navigate, Outlet } from 'react-router-dom';
+import Settings from './pages/Settings';
 
 export default function App() {
   function ProtectedRoute () {
@@ -18,18 +19,28 @@ export default function App() {
     );
   }
 
+  function AnonymousRoute () {
+    const isLoggedIn = !!localStorage.getItem('token');
+
+    return (
+      isLoggedIn ? (<Navigate to={urlReactHome} replace />) : (<Outlet />)
+    );
+  }
 
   return (
     <Router>
       <Layout>
           <Routes>
+            <Route path={urlReactHome} element={<Home />} />
             <Route element={<ProtectedRoute />}>
               <Route path={urlReactOrders} element={<Orders />} />
               <Route path={urlReactScanning} element={<Scanning />} />
+              <Route path={urlReactSettings} element={<Settings />} />
             </Route>
-            <Route path={urlReactHome} element={<Home />} />
-            <Route path={urlReactSignUp} element={<SignUp />} />
-            <Route path={urlReactSignIn} element={<SignIn />} />
+            <Route element={<AnonymousRoute />}>
+              <Route path={urlReactSignUp} element={<SignUp />} />
+              <Route path={urlReactSignIn} element={<SignIn />} />
+            </Route>
           </Routes>
       </Layout>
     </Router>

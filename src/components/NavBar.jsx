@@ -39,7 +39,6 @@ export default function NavBar(props) {
   const isLoggedIn = !!localStorage.getItem('token');
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -56,7 +55,7 @@ export default function NavBar(props) {
   return (
     <AppBar position="static">
       <Container maxWidth="xl" sx={{ height: 40 }}>
-        <Toolbar variant='dense' disableGutters sx={{ minHeight: 40, height: 40 }}>
+        <Toolbar variant='dense' disableGutters sx={{ minHeight: 40, height: 40}}>
           <PrecisionManufacturingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
@@ -154,7 +153,7 @@ export default function NavBar(props) {
                     </Button>
                 )}
             )}
-            {props.path === urlReactOrders && (
+            {props.path === urlReactOrders &&  (
               <ImportOrderButton />
             )}
           </Box>
