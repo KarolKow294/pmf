@@ -8,22 +8,27 @@ import Typography from '@mui/material/Typography';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { urlReactSignUp, urlReactSignIn } from '../endpoints';
 
+const isLoggedIn = !!localStorage.getItem('token');
 const settings = [
     {
       name: 'Rejestracja',
-      path: urlReactSignUp
+      path: urlReactSignUp,
+      isVisible: !isLoggedIn
     },
     {
       name: 'Ustawienia',
-      path: '/'
+      path: '/',
+      isVisible: isLoggedIn
     },
     {
       name: 'Logowanie',
-      path: urlReactSignIn
+      path: urlReactSignIn,
+      isVisible: !isLoggedIn
     },
     {
       name: 'Wyloguj',
-      path: '/'
+      path: 'logout',
+      isVisible: isLoggedIn
     }
   ];
 
@@ -35,7 +40,11 @@ export default function ProfileMenu() {
       };
 
     const handleCloseUserMenu = (path) => {
-        if (path !== '/') {
+        if (path === 'logout') {
+            localStorage.removeItem('token');
+            window.location.href='/';
+        }
+        else if (path !== '') {
             setAnchorElUser(null);
             window.location.href=path;
         } else {
@@ -64,12 +73,14 @@ export default function ProfileMenu() {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={() => handleCloseUserMenu('/')}
+                onClose={() => handleCloseUserMenu('')}
               >
                 {settings.map((setting) => (
+                  setting.isVisible && (
                   <MenuItem key={setting.name} onClick={() => handleCloseUserMenu(setting.path)}>
                     <Typography textAlign="center">{setting.name}</Typography>
                   </MenuItem>
+                  )
                 ))}
               </Menu>
             </Box>

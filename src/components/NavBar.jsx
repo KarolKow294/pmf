@@ -36,6 +36,7 @@ const pages = [
 ];
 
 export default function NavBar(props) {
+  const isLoggedIn = !!localStorage.getItem('token');
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
 
@@ -74,7 +75,7 @@ export default function NavBar(props) {
           >
             PMF
           </Typography>
-
+          { isLoggedIn && (
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -115,6 +116,7 @@ export default function NavBar(props) {
               )}
             </Menu>
           </Box>
+          )}
           <PrecisionManufacturingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -134,6 +136,7 @@ export default function NavBar(props) {
           >
             PMF
           </Typography>
+          {isLoggedIn && (
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => {
                 const { name, Icon, path } = page
@@ -155,6 +158,7 @@ export default function NavBar(props) {
               <ImportOrderButton />
             )}
           </Box>
+          )}
           <ProfileMenu />
         </Toolbar>
       </Container>
