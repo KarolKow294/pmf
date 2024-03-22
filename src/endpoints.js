@@ -10,6 +10,7 @@ export const urlPart = `${baseURL}/api/orders/part`;
 export const urlDrawing = `${baseURL}/api/orders/part/drawing`;
 export const urlCsv = `${baseURL}/api/orders/csv`;
 export const urlStorages = `${baseURL}/api/storages`;
+export const urlActualStorage = `${baseURL}/api/storages`;
 export const urlRegister = `${baseURL}/api/account/register`;
 export const urlLogin = `${baseURL}/api/account/login`;
 export const urlPassword = `${baseURL}/api/account/password`;
